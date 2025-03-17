@@ -3,6 +3,7 @@ import "dotenv/config";
 import express from "express";
 import { InfraServices } from "../infra/types.js";
 import { infraMiddleware } from "./middlewares/infra-middleware.js";
+import { uploadRouter } from "./routes/upload.js";
 
 const initializeHttpServer = async (infraServices: InfraServices, port: string) => {
   const app = express();
@@ -15,6 +16,8 @@ const initializeHttpServer = async (infraServices: InfraServices, port: string) 
   app.get("/health", (req, res) => {
     res.send("OK");
   });
+
+  app.use("/api/v1/uploads", uploadRouter);
 
   const httpServer = app.listen(port, () => console.log(`Server Listening @ http://localhost:${port}`));
 
