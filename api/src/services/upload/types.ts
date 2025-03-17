@@ -11,5 +11,10 @@ export type UploadServiceResponse = {
   status: UploadStatus;
 };
 
+export type StatusServiceResponse = {
+  status: UploadStatus;
+  progress: number;
+  processedFileUrl?: string;
+};
 
 export type UploadStatus = (typeof UPLOAD_STATUS)[keyof typeof UPLOAD_STATUS];

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { processingStatusCheckService } from "../../services/upload/upload-status.js";
 import { uploadFileService } from "../../services/upload/upload.js";
 
 export const uploadCsvFile = async (req: Request, res: Response) => {
@@ -28,7 +29,14 @@ export const checkProcessingStatus = async (req: Request, res: Response) => {
       throw new Error("No uploadId found");
     }
 
-    res.status(200).contentType("application/json").send({ success: true, data: "OK" });
+    const serviceRes = await processingStatusCheckService(req.services, uploadId.toString());
+
+    const response = {
+      success: true,
+      data: serviceRes,
+    };
+
+    res.status(200).contentType("application/json").send(response);
   } catch (error) {
     res.status(400).contentType("application/json").send({ success: false, error: error.message });
   }
