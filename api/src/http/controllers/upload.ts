@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { uploadFileService } from "../../services/upload/upload.js";
 
 export const uploadCsvFile = async (req: Request, res: Response) => {
   try {
@@ -6,7 +7,14 @@ export const uploadCsvFile = async (req: Request, res: Response) => {
       res.status(400).contentType("application/json").send({ success: false, error: "No Upload file found" });
     }
 
-    res.status(200).contentType("application/json").send({ success: true, data: "OK" });
+    const serviceRes = await uploadFileService(req.services, req.file);
+
+    const response = {
+      success: true,
+      data: serviceRes,
+    };
+
+    res.status(200).contentType("application/json").send(response);
   } catch (error) {
     res.status(400).contentType("application/json").send({ success: false, error: error.message });
   }
