@@ -1,0 +1,37 @@
+{
+  "name": "pixelriver",
+  "version": "1.0.0",
+  "description": "Lost in the River of Pixels",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "rm -rf build && npx tsc",
+    "dev": "node --loader ts-node/esm src/app.ts"
+  },
+  "keywords": [
+    "pixelriver"
+  ],
+  "author": "Chinmay Agrawal",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/storage": "^7.15.2",
+    "@redis/client": "^1.6.0",
+    "cors": "^2.8.5",
+    "csv-parser": "^3.2.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "kafkajs": "^2.2.4",
+    "mongodb": "^6.14.2",
+    "multer": "^1.4.5-lts.1",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/mongodb": "^4.0.7",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.13.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
