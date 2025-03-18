@@ -26,8 +26,9 @@ export const processingStatusCheckService = async (services: InfraServices, uplo
   const collection = services.mongoDb.collection<UploadSchema>(uploadCollectionName);
   const uploadInfo = await collection.findOne({ _id: new ObjectId(uploadId) });
   if (!uploadInfo) {
-    // enhancemnt scope:
-    // As this is invalid uploadIDAdd key in redis for this uploadId with status: "not found" with EX=3600. Will prevent further DB calls
+    // As this is invalid uploadID. So add key in redis for this uploadId with status: "not found" with EX=3600.
+    // Will prevent further DB calls if API called too frequently
+    await services.redis.set(uploadId, `file not found:0`, { EX: 3600 });
     throw new Error(`Upload with id ${uploadId} not found`);
   }
 
