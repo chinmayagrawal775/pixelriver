@@ -6,6 +6,10 @@ import { StatusServiceResponse, UploadStatus } from "./types.js";
 // this will be used for checking the processing status
 // if processing is incomplete, then it return the status & progress. if it is complete then it also returns the processed file url
 export const processingStatusCheckService = async (services: InfraServices, uploadId: string): Promise<StatusServiceResponse> => {
+  if (!ObjectId.isValid(uploadId)) {
+    throw new Error(`Invalid UploadID: ${uploadId}`);
+  }
+
   const uploadInfoFromRedis = await services.redis.get(uploadId);
   // cache hit
   if (uploadInfoFromRedis) {
