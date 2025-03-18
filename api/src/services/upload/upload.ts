@@ -27,9 +27,9 @@ export const uploadFileService = async (services: InfraServices, file: Express.M
 
   const uniqueUploadId = insertResult.insertedId.toString();
 
-  await services.redis.set(uniqueUploadId, `${uploadObject.status}:${uploadObject.progress}`);
-
   await pushToKafka(services.kafka, services.kafkaConnectedProducer, services.logr).inUploadProcessingTopic(uniqueUploadId);
+
+  await services.redis.set(uniqueUploadId, `${uploadObject.status}:${uploadObject.progress}`);
 
   return { uploadId: uniqueUploadId, status: uploadObject.status };
 };
