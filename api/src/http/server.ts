@@ -1,6 +1,7 @@
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
+import path from "path";
 import { InfraServices } from "../infra/types.js";
 import { infraMiddleware } from "./middlewares/infra-middleware.js";
 import { uploadRouter } from "./routes/upload.js";
@@ -16,6 +17,13 @@ const initializeHttpServer = async (infraServices: InfraServices, port: string) 
   app.get("/health", (req, res) => {
     res.send("OK");
   });
+
+  if (process.env.NODE_ENV !== "production") {
+    app.use("/api-docs-internal", express.static(path.join(process.cwd(), "docs")));
+    app.get("/api-docs-internal", (req, res) => {
+      res.sendFile(path.join(process.cwd(), "docs", "index.html"));
+    });
+  }
 
   app.use("/api/v1/uploads", uploadRouter);
 

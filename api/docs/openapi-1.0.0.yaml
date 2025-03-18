@@ -1,0 +1,180 @@
+openapi: 3.0.0
+info:
+  title: Pixelriver
+  description: >-
+    This Provides the description of APIs to interact with the pixelriver
+    service.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001/
+paths:
+  /api/v1/uploads:
+    post:
+      tags:
+        - Upload
+      summary: Upload CSV File
+      description: |-
+        ### Upload CSV File
+
+        This endpoint allows you to upload a CSV file for processing.
+
+        #### Request Body
+
+        - `csvFile` (file): File which you want to get processed.
+            
+
+        #### Response
+
+        The response is in JSON format and has the following schema:
+
+        ``` json
+        {
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "uploadId": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+
+         ```
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                csvFile:
+                  type: string
+                  description: file which you want to get processed
+                  format: csv
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/uploads/status:
+    get:
+      tags:
+        - Upload
+      summary: Status Check API
+      description: >-
+        This endpoint makes an HTTP GET request to retrieve the status of a
+        specific upload. The request should be made with the query parameter uploadId set to
+        the unique identifier of the upload.
+
+
+        ### Query Parameters
+
+
+        - `uploadId`: The unique identifier of the upload.
+            
+
+        ### Expected Response
+
+
+        The endpoint returns a 200 status code with a JSON response in the
+        following format:
+
+
+        ``` json
+
+        {
+            "success": true,
+            "data": {
+                "status": "",
+                "progress": 0
+            }
+        }
+
+         ```
+
+        - `success`: A boolean indicating the success of the request.
+            
+        - `data.status`: The status of the upload.
+            
+        - `data.progress`: The progress of the upload, represented as a numeric
+        value.
+            
+
+        This endpoint retrieves the status and progress of a specific upload
+        identified by the `uploadId` parameter.
+
+
+        #### Request
+
+
+        - Query Parameters
+            
+            - `uploadId` (string, required): The unique identifier of the upload.
+                
+
+        #### Response
+
+
+        The response is in JSON format and follows the schema below:
+
+
+        ``` json
+
+        {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "status": {
+                            "type": "string"
+                        },
+                        "progress": {
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+        }
+
+         ```
+
+        The response body contains the following fields:
+
+
+        - `success` (boolean): Indicates whether the request was successful.
+            
+        - `data` (object): Contains the status and progress information.
+            
+            - `status` (string): The current status of the upload.
+                
+            - `progress` (integer): The progress of the upload, represented as a percentage.
+                
+
+        #### Rate Limiting:
+
+
+        This API has rate limiting. User can request upto 10request/minute.
+      parameters:
+        - name: uploadId
+          in: query
+          schema:
+            type: string
+          description: uploadID returned at the time of upload to check the status
+          example: 67d88520b0269da4c7bf3e42
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
