@@ -4,6 +4,10 @@ import winston from "winston";
 const UPLOAD_PROCESSING_TOPIC = "pixelriver-new-upload";
 
 const initializeKafka = async (kafkaBrokers: string[]): Promise<[Kafka, Producer]> => {
+  if (process.env.DISABLE_KAFKA === "true") {
+    return [null, null];
+  }
+
   try {
     const kafka = new Kafka({
       clientId: "pixelriver",
@@ -33,6 +37,10 @@ export const getKafka = async (): Promise<[Kafka, Producer]> => {
 
 export const pushToKafka = (kafka: Kafka, connectedProducer: Producer, logr: winston.Logger) => {
   const sendToTopic = (topic: string, message: string) => {
+    if (process.env.DISABLE_KAFKA === "true") {
+      return;
+    }
+
     return connectedProducer.send({ messages: [{ value: message }], topic: topic });
   };
 
