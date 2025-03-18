@@ -1,5 +1,6 @@
 import { Db, MongoClient } from "mongodb";
 
+// this function will initialize the mongodb client and returns the db instance
 const initializeMongoDb = async (dbUrl: string): Promise<Db> => {
   try {
     const client = new MongoClient(dbUrl);
@@ -15,6 +16,7 @@ const initializeMongoDb = async (dbUrl: string): Promise<Db> => {
   }
 };
 
+// this will return the connected mongodb instance
 export const getMongoDB = async (): Promise<Db> => {
   if (!process.env.MONGO_DB_URI) {
     console.log("MONGO_DB_URI is not defined");

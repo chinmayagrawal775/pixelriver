@@ -4,6 +4,10 @@ import { getMongoDB } from "./mongo.js";
 import { getRedis } from "./redis.js";
 import { InfraServices } from "./types.js";
 
+/**
+ * this function will initialize all the infra services
+ * it will return the infra services object
+ */
 export const getInfraServices = async (): Promise<InfraServices> => {
   const logr = await getWinstonLogger();
   const mongoDb = await getMongoDB();

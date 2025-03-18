@@ -1,10 +1,14 @@
 import { createClient, RedisClientType, RedisFunctions, RedisModules, RedisScripts } from "@redis/client";
 
+// this function will initialize the redis client and returns the redis instance
 const initializeRedis = async (redisUri: string): Promise<RedisClientType<RedisModules, RedisFunctions, RedisScripts>> => {
   try {
     const client = createClient({ url: redisUri });
     await client.connect();
-    client.set("pixelriver", `service-initialized-${Date.now()}`);
+
+    // set the dummy key in redis
+    client.set("pixelriver", `service-initialized-${Date.now()}`, { EX: 600 });
+
     return client;
   } catch (error) {
     console.log(error);

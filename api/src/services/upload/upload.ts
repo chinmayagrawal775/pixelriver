@@ -7,11 +7,15 @@ import { uploadCollectionName, UploadSchema } from "../../models/upload.js";
 import { UPLOAD_STATUS } from "./constant.js";
 import { CsvRow, UploadServiceResponse } from "./types.js";
 
+// this service will be used to upload the csv file and process it
 export const uploadFileService = async (services: InfraServices, file: Express.Multer.File): Promise<UploadServiceResponse> => {
+  // validate the csv file
   await validateCSV(file);
 
+  // upload the file to GCP
   const uploadedFileUrl = await uploadImageDataCsvToCloudStorage(file.path, file.filename);
 
+  // prepare the bson object to insert in mongoDB
   const uploadObject: UploadSchema = {
     oFileName: file.originalname,
     fileName: file.filename,
@@ -23,14 +27,19 @@ export const uploadFileService = async (services: InfraServices, file: Express.M
     updatedAt: new Date(),
   };
 
+  // insert the object in mongoDB
   const insertResult = await services.mongoDb.collection<UploadSchema>(uploadCollectionName).insertOne(uploadObject);
 
+  // get the unique uploadID. This will be used for further status check by user
   const uniqueUploadId = insertResult.insertedId.toString();
 
+  // push to kafka queue for further processing
   await pushToKafka(services.kafka, services.kafkaConnectedProducer, services.logr).inUploadProcessingTopic(uniqueUploadId);
 
+  // set the intial status in redis. set both status and progress
   await services.redis.set(uniqueUploadId, `${uploadObject.status}:${uploadObject.progress}`);
 
+  // return the uploadID and the status
   return { uploadId: uniqueUploadId, status: uploadObject.status };
 };
 
@@ -68,10 +77,12 @@ export const validateCsvRow = (row: CsvRow): void => {
 
   const imageUrls = row["Input Image Urls"].split(",");
 
+  // rows with empty image URLs not allowed
   if (imageUrls.length < 1) {
     throw new Error("Input Image Urls is required");
   }
 
+  // validate each URL should be valid
   imageUrls.forEach((imageUrl) => {
     try {
       new URL(imageUrl);

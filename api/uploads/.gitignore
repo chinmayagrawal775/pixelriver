@@ -4,3 +4,5 @@
 
 # ... except for this one.
 !.gitignore
+
+# This directory is used for holding the user uploaded files temporarly
