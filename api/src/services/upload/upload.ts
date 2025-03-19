@@ -93,10 +93,7 @@ export const validateCsvRow = (row: CsvRow): void => {
 
   // validate each URL should be valid
   imageUrls.forEach((imageUrl) => {
-    try {
-      new URL(imageUrl);
-      return true;
-    } catch (error) {
+    if (!isValidUrl(imageUrl)) {
       throw new Error(`Invalid Image Url: ${imageUrl}`);
     }
   });
