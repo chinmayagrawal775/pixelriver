@@ -1,3 +1,4 @@
+import { getGcpStorage } from "./gcp.js";
 import { getKafka } from "./kafka.js";
 import { getWinstonLogger } from "./logger.js";
 import { getMongoDB } from "./mongo.js";
@@ -14,6 +15,8 @@ export const getInfraServices = async (): Promise<InfraServices> => {
     const mongoDb = await getMongoDB(logr);
     const redis = await getRedis(logr);
     const [kafka, kafkaConnectedProducer] = await getKafka(logr);
+
+    await getGcpStorage(logr);
 
     logr.info("All Infra services initialized");
 

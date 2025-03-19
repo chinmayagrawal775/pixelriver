@@ -39,7 +39,7 @@ export const rateLimitingMiddleware = (keySource: RateLimitingKeySource, keyName
 
       next();
     } catch (err) {
-      console.error("Redis Error:", err);
+      req.services.logr.error(`Rate Limiting Error: ${JSON.stringify(err)}`);
       res.status(500).json({ error: "Internal Server Error" });
       return;
     }
