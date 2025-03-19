@@ -7,6 +7,7 @@ import { StatusServiceResponse, UploadStatus } from "./types.js";
 // if processing is incomplete, then it return the status & progress. if it is complete then it also returns the processed file url
 export const processingStatusCheckService = async (services: InfraServices, uploadId: string): Promise<StatusServiceResponse> => {
   if (!ObjectId.isValid(uploadId)) {
+    services.logr.warn(`Invalid Upload with id ${uploadId}`);
     throw new Error(`Invalid UploadID: ${uploadId}`);
   }
 
@@ -26,6 +27,7 @@ export const processingStatusCheckService = async (services: InfraServices, uplo
   const collection = services.mongoDb.collection<UploadSchema>(uploadCollectionName);
   const uploadInfo = await collection.findOne({ _id: new ObjectId(uploadId) });
   if (!uploadInfo) {
+    services.logr.warn(`Upload with id ${uploadId} not found`);
     // As this is invalid uploadID. So add key in redis for this uploadId with status: "not found" with EX=3600.
     // Will prevent further DB calls if API called too frequently
     await services.redis.set(uploadId, `file not found:0`, { EX: 3600 });

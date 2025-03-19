@@ -1,5 +1,6 @@
 import { Storage } from "@google-cloud/storage";
 import fs from "fs";
+import { type Logger } from "winston";
 
 // this function will intitialize the new gcp storage for the given projectID
 const initializeGcpStorage = async (gcpProjectId: string, gcpEndpoint: string): Promise<Storage> => {
@@ -11,7 +12,7 @@ const initializeGcpStorage = async (gcpProjectId: string, gcpEndpoint: string): 
 
     return storage;
   } catch (error) {
-    console.log(error);
+    console.log("Error in GCP storage", error);
     process.exit(1);
   }
 };
@@ -31,15 +32,20 @@ const uploadToGCcpBucket = async (bucketName: string, destinationPath: string, s
 
 // this function will upload the csv files to gcp storage. it returns the uploaded file url
 // it expects the filePath & fileName to be uploaded. It also delete the file from source if deleteFile is not specified
-export const uploadImageDataCsvToCloudStorage = async (filePath: string, fileName: string, deleteFile: boolean = true): Promise<string> => {
+export const uploadImageDataCsvToCloudStorage = async (
+  logr: Logger,
+  filePath: string,
+  fileName: string,
+  deleteFile: boolean = true
+): Promise<string> => {
   // check if ENVs are valid
   if (!process.env.GCP_IMAGE_DATA_CSV_BUCKET_NAME) {
-    console.log("GCP_BUCKET_NAME is not defined");
+    logr.error("GCP_BUCKET_NAME is not defined");
     process.exit(1);
   }
 
   if (!process.env.GCP_IMAGE_DATA_CSV_UPLOAD_PATH) {
-    console.log("IMAGE_DATA_CSV_UPLOAD_PATH is not defined");
+    logr.error("IMAGE_DATA_CSV_UPLOAD_PATH is not defined");
     process.exit(1);
   }
 

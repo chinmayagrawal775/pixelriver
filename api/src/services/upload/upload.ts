@@ -13,7 +13,7 @@ export const uploadFileService = async (services: InfraServices, file: Express.M
   await validateCSV(file);
 
   // upload the file to GCP
-  const uploadedFileUrl = await uploadImageDataCsvToCloudStorage(file.path, file.filename);
+  const uploadedFileUrl = await uploadImageDataCsvToCloudStorage(services.logr, file.path, file.filename);
 
   // prepare the bson object to insert in mongoDB
   const uploadObject: UploadSchema = {
@@ -38,6 +38,8 @@ export const uploadFileService = async (services: InfraServices, file: Express.M
 
   // set the intial status in redis. set both status and progress
   await services.redis.set(uniqueUploadId, `${uploadObject.status}:${uploadObject.progress}`);
+
+  services.logr.info("Upload with id: " + uniqueUploadId + " queued");
 
   // return the uploadID and the status
   return { uploadId: uniqueUploadId, status: uploadObject.status };

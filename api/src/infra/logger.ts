@@ -21,7 +21,7 @@ const initialzeWinstonLogger = async (): Promise<Logger> => {
     );
   }
 
-  logger.info("Logger initialized");
+  logger.info("Logger initialized. Please check the logs dir for further logging info.");
 
   return logger;
 };

@@ -9,16 +9,23 @@ import { InfraServices } from "./types.js";
  * it will return the infra services object
  */
 export const getInfraServices = async (): Promise<InfraServices> => {
-  const logr = await getWinstonLogger();
-  const mongoDb = await getMongoDB();
-  const redis = await getRedis();
-  const [kafka, kafkaConnectedProducer] = await getKafka();
+  try {
+    const logr = await getWinstonLogger();
+    const mongoDb = await getMongoDB(logr);
+    const redis = await getRedis(logr);
+    const [kafka, kafkaConnectedProducer] = await getKafka(logr);
 
-  return {
-    logr,
-    mongoDb,
-    redis,
-    kafka,
-    kafkaConnectedProducer,
-  };
+    logr.info("All Infra services initialized");
+
+    return {
+      logr,
+      mongoDb,
+      redis,
+      kafka,
+      kafkaConnectedProducer,
+    };
+  } catch (error) {
+    console.log("Error while initializing infra services: ", error);
+    process.exit(1);
+  }
 };

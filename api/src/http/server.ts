@@ -24,6 +24,7 @@ const initializeHttpServer = async (infraServices: InfraServices, port: string) 
 
   // these are the internal developer api docuemntation. Add only for local envs
   if (process.env.NODE_ENV !== "production") {
+    infraServices.logr.warn("Mounting the internal API docs route for local env. These are never mounted for production");
     // middleware for serving static files
     app.use("/api-docs-internal", express.static(path.join(process.cwd(), "docs")));
 
@@ -37,19 +38,25 @@ const initializeHttpServer = async (infraServices: InfraServices, port: string) 
   app.use("/api/v1/uploads", uploadRouter);
 
   // spin up the server to start accepting connections
-  const httpServer = app.listen(port, () => console.log(`Server Listening @ http://localhost:${port}`));
+  const httpServer = app.listen(port);
 
-  console.log("server is serving");
+  infraServices.logr.info(`Server Listening: http://127.0.0.1:${process.env.PORT}/`);
 
   return httpServer;
 };
 
 export const getHttpServer = async (infraServices: InfraServices) => {
-  const port = process.env.PORT;
-  if (!port) {
-    console.log("PORT is not defined");
+  try {
+    const port = process.env.PORT;
+    if (!port) {
+      infraServices.logr.error("PORT is not defined");
+      throw new Error("PORT is not defined");
+    }
+
+    return await initializeHttpServer(infraServices, port);
+  } catch (error) {
+    infraServices.logr.error(error);
+    console.log("Error while starting the http server", error);
     process.exit(1);
   }
-
-  return await initializeHttpServer(infraServices, port);
 };
