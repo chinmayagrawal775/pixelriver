@@ -14,6 +14,8 @@ export type UploadSchema = {
   status: UploadStatus;
   progress: number;
 
+  webhookUrl: string;
+
   createdAt: Date;
   updatedAt: Date;
 };

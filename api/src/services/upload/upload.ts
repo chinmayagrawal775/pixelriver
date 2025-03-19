@@ -4,11 +4,16 @@ import { uploadImageDataCsvToCloudStorage } from "../../infra/gcp.js";
 import { pushToKafka } from "../../infra/kafka.js";
 import { InfraServices } from "../../infra/types.js";
 import { uploadCollectionName, UploadSchema } from "../../models/upload.js";
+import { isValidUrl } from "../../utils/url.js";
 import { UPLOAD_STATUS } from "./constant.js";
 import { CsvRow, UploadServiceResponse } from "./types.js";
 
 // this service will be used to upload the csv file and process it
-export const uploadFileService = async (services: InfraServices, file: Express.Multer.File): Promise<UploadServiceResponse> => {
+export const uploadFileService = async (services: InfraServices, file: Express.Multer.File, webhookUrl: string): Promise<UploadServiceResponse> => {
+  if (webhookUrl && !isValidUrl(webhookUrl)) {
+    throw new Error("Invalid webhook URL: " + webhookUrl);
+  }
+
   // validate the csv file
   await validateCSV(file);
 
@@ -22,6 +27,8 @@ export const uploadFileService = async (services: InfraServices, file: Express.M
 
     status: UPLOAD_STATUS.QUEUED,
     progress: 0,
+
+    webhookUrl: webhookUrl,
 
     createdAt: new Date(),
     updatedAt: new Date(),

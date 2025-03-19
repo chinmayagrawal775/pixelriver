@@ -11,7 +11,7 @@ export const uploadCsvFile = async (req: Request, res: Response) => {
       res.status(400).contentType("application/json").send({ success: false, error: "No Upload file found" });
     }
 
-    const serviceRes = await uploadFileService(req.services, req.file);
+    const serviceRes = await uploadFileService(req.services, req.file, req.body.webhookUrl);
 
     const response = {
       success: true,
