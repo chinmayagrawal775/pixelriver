@@ -6,6 +6,20 @@
     },
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[python]": {
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.defaultColorDecorators": "always",
+    "gitlens.codeLens.symbolScopes": [
+      "!Module"
+    ],
+    "editor.formatOnType": true,
+    "editor.wordBasedSuggestions": "off",
+    "editor.defaultFormatter": "ms-python.autopep8",
+  },
+  "autopep8.args": [
+     "--max-line-length",
+    "160"
+  ],
   "editor.wordWrap": "wordWrapColumn",
   "editor.wordWrapColumn": 160
 }
