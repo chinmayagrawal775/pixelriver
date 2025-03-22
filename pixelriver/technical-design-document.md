@@ -4,6 +4,9 @@
 
 PixelRiver is a file upload and processing system designed to handle file uploads and process images. Primary objective of the system is to do the compression of images whoose URLs are provided in the CSV.
 
+**System Design Diagram**
+<img src="https://github.com/chinmayagrawal775/pixelriver/blob/main/pixelriver/system-design.svg?raw=true" alt="system-design-diagram"></img>
+
 ## **2. Requirements**
 
 - Accept a csv in below format:
