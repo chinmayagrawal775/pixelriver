@@ -59,7 +59,12 @@ export const pushToKafka = (kafka: Kafka, connectedProducer: Producer, logr: Log
       return;
     }
 
-    return connectedProducer.send({ messages: [{ value: message }], topic: topic });
+    try {
+      return connectedProducer.send({ messages: [{ value: message }], topic: topic });
+    } catch (error) {
+      logr.error(error);
+      throw error;
+    }
   };
 
   // send the given message to the upload processing topic
