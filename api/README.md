@@ -1,6 +1,6 @@
 # APIs for interacting with upload service
 
-This service is the part of pixerrive application.
+This service is the part of pixelriver application.
 This service exposes the http APIs for interacting with pixelriver services
 
 For detailed scope of service: please refer the readme file in the root of repository

@@ -131,7 +131,7 @@ bin/kafka-topics.sh --create --topic pixelriver-new-upload --bootstrap-server lo
 
 > Note: You can also run the server without kafka by adding `DISABLE_KAFKA="true"` to the `.env` file for quick server launch
 
-> For GCP Setup: If you do not have valid GCP Creds then you can spin up thi fake GCP server: https://github.com/fsouza/fake-gcs-server This will work fine.
+> For GCP Setup: If you do not have valid GCP Creds then you can spin up this fake GCP server: https://github.com/fsouza/fake-gcs-server This will work fine.
 
 #### 2. API Service setup
 
@@ -148,10 +148,36 @@ npm run dev
 
 #### 3. Consumer Service setup
 
-To be added...
+```
+cd image_processor
+```
+
+make `.env` from `.env.example`. Then:
+
+```
+virtualenv venv
+source ./venv/bin/activate
+pip install -r requirements.txt
+
+# for running image worker
+python -m upload.main
+
+# for running webhook worker
+python -m webhook.main
+```
 
 ## Further Reference & Link
 
 - **Desing Diagram:** [here](https://github.com/chinmayagrawal775/pixelriver/blob/main/pixelriver/system-design.svg)
 - **Technical Design Docs:** [here](https://github.com/chinmayagrawal775/pixelriver/blob/main/pixelriver/technical-design-document.md)
 - **Public API Docs:** [here](https://documenter.getpostman.com/view/33976849/2sAYkDMLLw)
+
+## Future Developments Scope
+
+In future service can be extesible with:
+
+- Providing the user authentication
+- Saving the product data(which is in CSV) in DB
+- Implement Long Polling in Status-check API
+- Implement DLQ for failed processing.
+- Providing the internal analytics dashboards.
