@@ -133,7 +133,10 @@ Few configurations for reverse proxy:
 - These are the actual worker/consumers who are responsible for processing of the files.
 - Service is written in python.
 - Consumes the message from the kafa queue.
-- Do the image processing.
+- Do the image processing (this step is done in parallel via multi-threading. No. of worker decided at runtime)
+  - Download the image
+  - Process the image
+  - Upload the processed image to gcs
 - Regularly update the status & progress percentage in redis.
 - **When the processing is completed it will:**
   - Update the status & progress percentage in DB.
