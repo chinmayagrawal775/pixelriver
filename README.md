@@ -112,8 +112,9 @@ Ensure you kafka broker is running. Please refer the [Kafka Quickstart Guid](htt
 Following are the few useful commands:
 
 ```
-# Run zookeeper
-bin/zookeeper-server-start.sh config/zookeeper.properties
+# Format log directory
+KAFKA_CLUSTER_ID="$(bin/kafka-storage.sh random-uuid)"
+bin/kafka-storage.sh format --standalone -t $KAFKA_CLUSTER_ID -c config/server.properties
 
 # Run kafka server
 bin/kafka-server-start.sh config/server.properties
