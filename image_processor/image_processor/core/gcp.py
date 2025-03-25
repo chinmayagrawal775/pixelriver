@@ -11,7 +11,7 @@ class GCPStorageManager:
     def __init__(self, logger: logging.Logger):
         self.logger = logger
         self.client = None
-        self.base_path = os.path.join(os.getcwd(), "image_processor")
+        self.base_path = os.path.join(os.getcwd())
 
         self.project_id = os.getenv("GCP_PROJECT_ID")
         self.endpoint = os.getenv("GCP_ENDPOINT")
