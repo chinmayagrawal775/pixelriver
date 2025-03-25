@@ -30,6 +30,12 @@ class WebhookNotification:
             self.logr.exception(e)
 
     def _notify(self):
+        """
+        this will:
+            - parse the incoming msg
+            - make the webhook request
+            - save the webhook response in database
+        """
         upload_id, url = self._parse_msg()
         webhook_reponse = self._make_webhook_request(url)
         self._save_webhook_repsonse(upload_id, webhook_reponse)
